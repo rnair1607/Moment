@@ -20,4 +20,4 @@ Installs the dependencies for the backend server.
 
 ### `npm run dev`
 
-Starts both the dev server for both the application. The frontend application will be running on [text](http://localhost:3000/) and the backend server will be listening at [text](http://localhost:8000/)
+Starts both the dev server for both the application. The frontend application will be running on `http://localhost:3000/` and the backend server will be listening at `http://localhost:8000/`
