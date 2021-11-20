@@ -1,0 +1,14 @@
+{
+  "name": "moments-app",
+  "version": "1.0.0",
+  "description": "An assignment from the recruiter",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^6.4.0"
+  }
+}
