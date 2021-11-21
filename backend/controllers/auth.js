@@ -8,12 +8,13 @@ const { registerValidation, loginValidation } = require('../validation');
 const registerAuth = async (req, res) => {
   // console.log(req);
   const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send({ message: error.details[0].message });
 
   try {
     const emailExists = await User.findOne({ email: req.body.email });
 
-    if (emailExists) return res.status(400).send('Email already exists');
+    if (emailExists)
+      return res.status(400).send({ message: 'Email already exists' });
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -36,32 +37,49 @@ const registerAuth = async (req, res) => {
       },
       process.env.TOKEN_SECRET
     );
-    res.header('auth-token', token).json({ token });
+    res.header('auth-token', token).json({
+      _id: user._id,
+      name: user.firstName + ' ' + user.lastName,
+      email: user.email,
+      token,
+    });
   } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 };
 
 //Login a user and return a token
 const loginAuth = async (req, res) => {
   const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send({ message: error.details[0].message });
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).json({ message: 'User not found' });
 
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).send('User not found');
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword)
+      return res.status(400).json({ message: 'Password invalid' });
 
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) return res.status(400).send('Password invalid');
-
-  const token = jwt.sign(
-    {
+    const token = jwt.sign(
+      {
+        _id: user._id,
+        name: user.firstName + ' ' + user.lastName,
+        email: user.email,
+      },
+      process.env.TOKEN_SECRET
+    );
+    res.header('auth-token', token).json({
       _id: user._id,
       name: user.firstName + ' ' + user.lastName,
       email: user.email,
-    },
-    process.env.TOKEN_SECRET
-  );
-  res.header('auth-token', token).json({ token });
+      token,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 module.exports = { registerAuth: registerAuth, loginAuth: loginAuth };

@@ -8,7 +8,7 @@ const fileUpload = require('express-fileupload');
 const authRoute = require('./routes/auth');
 const momentRoutes = require('./routes/moments');
 const momentUploadRoutes = require('./routes/momentUpload');
-// const verifyTokenRoute = require('./routes/verifyToken');
+const verifyTokenRoute = require('./routes/verifyToken');
 
 dotenv.config();
 
@@ -29,7 +29,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/user', authRoute);
-// app.use('/api/token', verifyTokenRoute);
+app.use('/api/token', verifyTokenRoute);
 app.use('/api/moment', momentRoutes);
 app.use('/api/fileUpload', require('./routes/momentUpload'));
 

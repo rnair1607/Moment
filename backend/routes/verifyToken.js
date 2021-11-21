@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-const { tokenVerify } = require('../controllers/verifyToken');
+const { tokenValidate } = require('../controllers/verifyToken');
 
-router.post('/verify', tokenVerify);
+router.get('/verify', tokenValidate);
 
 module.exports = router;
