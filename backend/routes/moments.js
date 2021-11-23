@@ -28,7 +28,9 @@ router.get('/getMoment/:id', tokenVerify, async (req, res) => {
 //Get all moments
 router.get('/allMoments', tokenVerify, async (req, res) => {
   try {
-    const moments = await Moment.find().sort({ created: -1 });
+    const moments = await Moment.find({ user: req.body.user })
+      .sort({ created: -1 })
+      .exec();
     res.status(200).send(moments);
   } catch (err) {
     res.status(500).send(err);

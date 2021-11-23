@@ -20,15 +20,24 @@ const momentSchema = new mongoose.Schema({
     required: true,
     min: 3,
   },
-  comment: {
-    type: String,
-    required: true,
-    min: 3,
-  },
+  tags: [
+    {
+      index: Number,
+      displayValue: String,
+    },
+  ],
   image: {
-    type: String,
-    required: true,
-    min: 3,
+    url: {
+      type: String,
+      required: true,
+    },
+    public_id: {
+      type: String,
+      required: true,
+    },
+    fileSize: {
+      type: Number,
+    },
   },
   created: {
     type: Date,

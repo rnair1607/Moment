@@ -7,10 +7,25 @@ const momentUpload = async (req, res) => {
     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
       upload_preset: 'moment_upload',
     });
-    res.json({ url: uploadedResponse.url });
+    // console.log(uploadedResponse);
+    res.json({
+      url: uploadedResponse.url,
+      public_id: uploadedResponse.public_id,
+    });
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-module.exports = { momentUpload };
+const momentDelete = async (req, res) => {
+  try {
+    const { public_id } = req.body;
+    const deletedResponse = await cloudinary.uploader.destroy(public_id);
+    // console.log(deletedResponse);
+    res.json(deletedResponse);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+module.exports = { momentUpload, momentDelete };
